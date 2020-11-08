@@ -1,0 +1,98 @@
+/* html {
+    font-family: sans-serif;
+    color: #3d3d3d;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    background-color: #c72222;
+    padding: 10px 20px;
+    border: 0px solid #c72222;
+    color: white;
+    font-weight: bold;
+}
+
+.correct-answer {
+    background-color: #079400;
+}
+
+.incorrect-answer {
+    background-color: #d40e00;
+}
+
+form div {
+    margin: 5px 0;
+} */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #3d3d3d;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    align-items: center;
+    justify-content: center;
+    padding: 30px 5%;
+    width: 100%;
+}
+
+.content {
+    width: 90%;
+    margin: 0 auto;
+}
+
+button {
+    background-color: black;
+    padding: 10px 20px;
+    border: 0px solid black;
+    color: white;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+form div {
+    margin: 5px 0;
+}
+
+p {
+    margin-top: 40px;
+}
+
+h1 {
+    color: white;
+    text-shadow: 2px 2px #ff0000;
+    font-size: 40px;
+    text-align: center;
+}
+
+#answer {
+    margin-top: 10px;
+}
+
+@media all and (min-width: 600px) {
+    .content {
+        width: 50%;
+    }
+}
