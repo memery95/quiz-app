@@ -81,8 +81,7 @@ p {
 }
 
 h1 {
-    color: white;
-    text-shadow: 2px 2px #ff0000;
+    color: black;
     font-size: 40px;
     text-align: center;
 }
@@ -95,4 +94,12 @@ h1 {
     .content {
         width: 50%;
     }
+}
+
+.content button:hover {
+    cursor: pointer;
+}
+
+.content form input:hover {
+    cursor: pointer;
 }

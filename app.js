@@ -75,30 +75,38 @@ const store = {
    * 
    */
 
-   function renderFirstPage () {
+
+  //Function to render first page to start the quiz
+    function renderFirstPage () {
+        //store the first page within a variable to return for when function is called
        let firstPage = 
         `<div class="content">
-        <h2>Here you GO!!</h2>
-        <p>Are You Ready?</p>
-        <button id="start">Get Started</button> 
+        <h2>Are you ready?</h2>
+        <p>Press the button to start the quiz</p>
+        <button id="start">Begin</button> 
         </div>`;
         
         return firstPage;
-   }
+    }
 
-   function handleStartQuiz () {
-    $('main').on('click', '#start', function () {
-        store.quizStarted = true;
-        render();
-    });
-   }
+    //Function to handle the even listener for the quiz
+    function startQuiz () {
+        //even listener function for the start button to be pressed 
+        $('main').on('click', '#start', function () {
+            store.quizStarted = true;
+            render();
+        });
+    }
 
-   function questionPage () {
-       if (store.questionNumber === store.questions.length) {
-           return renderFinalPage();
-       }
-       let currentQuestion = store.questions[store.questionNumber];
-       let questionPage = `
+    //function to handle each question page and its html elements
+    function questionPage () {
+        //if statement to see if the store has reached its final question 
+        if (store.questionNumber === store.questions.length) {
+            return renderFinalPage();
+        }
+        //create variables for questionNumber and the html variables
+        let currentQuestion = store.questions[store.questionNumber];
+        let questionPage = `
             <div class="content">
                 <h2>Question ${store.questionNumber+1}: ${currentQuestion.question}</h2>
                 <p>Your score: ${store.score}/5</p>
@@ -114,90 +122,109 @@ const store = {
                     <button id="submit">Submit</button>
                 </form>
             </div>`;
-       
+        //return the variable that has html elements
         return questionPage;
-   }
+    }
   
+    //function to check if the submitted is correct
+    function answerSubmit () {
+        //even listener function for the submit button
+        $('main').on('submit', 'form', function (event) {
+            event.preventDefault();
+            //store the submitted answer into a variable
+            let answer = $(`input[name='answer']:checked`).val();
+            //store correctAnswer into a variable
+            let currentCorrectAnswer = store.questions[store.questionNumber].correctAnswer;
+            //if statement to check if the answer equals the correct answer
+            if (answer === currentCorrectAnswer) {
+                //increase the score if correct
+                store.score++;
+                $('main').html(renderCorrectAnswerPage());
+            } else {
+                $('main').html(renderIncorrectAnswerPage());
+            }
+            //increase the questionNumber 
+            store.questionNumber++;
+        });
+        render();
+    }
 
-   function handleAnswerSubmit () {
-       $('main').on('submit', 'form', function (event) {
-           event.preventDefault();
+    //render the correct answer page function
+    function renderCorrectAnswerPage () {
+        //store html elements into variables
+        let correctAnswerPage = `<div class="content">
+        <h2>Correct!</h2>
+        <p>Your score: ${store.score}/5</p>
+        <form>
+        <button id="next-question">Next Question</button>
+        </form>
+        </div>`;
+        return correctAnswerPage;
+    }
 
-           let answer = $(`input[name='answer']:checked`).val();
-           let currentCorrectAnswer = store.questions[store.questionNumber].correctAnswer;
+    //render the incorrect answer page function
+    function renderIncorrectAnswerPage () {
+        //store the incorrect page html element in variables
+        let incorrectAnswerPage = `<div class="content">
+        <h2>Wrong Answer</h2>
+        <p>The correct answer was ${store.questions[store.questionNumber].correctAnswer}.</p>
+        <p>Your score: ${store.score}/5</p>
+        <form> 
+        <button id="next-question">Next Question</button> 
+        </form> 
+        </div>`;
+        return incorrectAnswerPage;
+    }
 
-           if (answer === currentCorrectAnswer) {
-               store.score++;
-               $('main').html(renderCorrectAnswerPage());
-           } else {
-               $('main').html(renderIncorrectAnswerPage());
-           }
-           store.questionNumber++;
-       });
-       render();
-   }
+    //function for event listener for the next question
+    function nextQuestion () {
+        //even listener for next question submit form
+        $('main').on('click', '#next-question', function (event) {
+            event.preventDefault();
+            $('main').html(store.questions[store.questionNumber]);
+            render();
+        });
+    }
 
-   function renderCorrectAnswerPage () {
-       let correctAnswerPage = `<div class="content"><h2>Correct!!</h2> <p>Your score: ${store.score}/5</p><form> <button id="next-question">Next Question</button> </form> </div>`;
-       return correctAnswerPage;
-   }
+    //function to render final page 
+    function renderFinalPage () {
+        //variable to store html elements
+        let finalPage = `<div class="content">
+        <h2>Finished!</h2>
+        <p>Your final score is ${store.score}/5. Press the Button below to restart the quiz!</p>
+        <button id="restart">Restart</button> 
+        </div>`;
+        return finalPage;
+    }
 
-   function renderIncorrectAnswerPage () {
-    let incorrectAnswerPage = `<div class="content">
-    <h2>Sorry Bud</h2> <p>The correct answer was ${store.questions[store.questionNumber].correctAnswer}. Better luck next time!</p> <p>Your score: ${store.score}/5</p><form> <button id="next-question">Next Question</button> </form> </div>`
-    return incorrectAnswerPage;
-   }
+    //function to handle restart 
+    function finalPageRestart () {
+        $('main').on('click', '#restart', function () {
+            store.quizStarted = false;
+            store.questionNumber = 0;
+            store.score = 0;
+            render();
+        });
+    }
 
-   function handleNextQuestion () {
-       $('main').on('click', '#next-question', function (event) {
-           event.preventDefault();
-           $('main').html(store.questions[store.questionNumber]);
-           render();
-       });
-   }
+    //render function check if the quiz start 
+    function render () {
+        //if false render first page
+        if (store.quizStarted === false) {
+            $('main').html(renderFirstPage());
+        } else if (store.quizStarted) {
+            //if true render question page
+            $('main').html(questionPage());
+        }
+    }
 
+    //main function
+    function main () {
+        render();
+        startQuiz();
+        answerSubmit();
+        nextQuestion();
+        finalPageRestart();
+    }
 
-   function handleFinalPage () {
-    let finalPage = `<div class="content">
-    <h2>Fin</h2> <img src="images/end-quiz.gif" alt="Cars driving, split off at fork" /><p>Your final score is ${store.score}/5... hope you are proud of yourself</p>
-     <button id="restart">Restart</button> </div>`
-    return finalPage;
-   }
-
-   function handleFinalPage () {
-       $('main').on('click', '#restart', function () {
-           store.quizStarted = false;
-           store.questionNumber = 0;
-           store.score = 0;
-           render();
-       });
-   }
-
-   function render () {
-       if (store.quizStarted === false) {
-           $('main').html(renderFirstPage());
-       } else if (store.quizStarted) {
-           $('main').html(questionPage());
-       }
-   }
-
-   function main () {
-       render();
-       handleStartQuiz();
-       handleAnswerSubmit();
-       handleNextQuestion();
-       handleFinalPage();
-   }
-
-   $(main);
-  /********** TEMPLATE GENERATION FUNCTIONS **********/
-  
-  // These functions return HTML templates
-  
-  /********** RENDER FUNCTION(S) **********/
-  
-  // This function conditionally replaces the contents of the <main> tag based on the state of the store
-  
-  /********** EVENT HANDLER FUNCTIONS **********/
-  
-  // These functions handle events (submit, click, etc)
+    $(main);
