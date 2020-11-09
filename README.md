@@ -2,7 +2,7 @@
 
 ## Notes
 
-- Wireframe image is included as a file in repo
+This quiz is about which U.S. cities are capitals for their respective states
 
 ### Questions and Answers
 
